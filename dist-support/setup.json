@@ -1,0 +1,65 @@
+{
+	"serverSetup": {
+		"server": {
+			"type": "first",
+			"name": "demo",
+			"domainName": "IDP",
+			"title": "IDP Demo Server",
+			"password": null,
+			"minPasswordLength": 0
+		},
+		"network": {
+			"hostName": "domino.idp-demo.com",
+			"enablePortEncryption": true,
+			"enablePortCompression": true
+		},
+		"org": {
+			"countryCode": null,
+			"orgName": "IDP",
+			"certifierPassword": "password",
+			"orgUnitName": null,
+			"orgUnitPassword": null
+		},
+		"admin": {
+			"firstName": "IDP-Demo",
+			"middleName": null,
+			"lastName": "Admin",
+			"password": "password",
+			"IDFilePath":  "/local/dominodata/idp-demo-user.id"
+		},
+		"notesINI": {
+			"ServerTasks": null,
+			"LOG_REPLICATION": "1",
+			"LOG_SESSIONS": "1"
+		},
+		"security": {
+			"ACL": {
+				"prohibitAnonymousAccess": true,
+				"addLocalDomainAdmins": true
+			}
+		},
+		"autoRegister": {
+			"count": 7,
+			"IDPath": "/local/dominodata/ids",
+			"pattern": "server#"
+		}
+	},
+
+	"IDVault": {
+		"name": "O=IDPDemoVault",
+		"description": "IDP Demo Vault",
+		"IDFile": "IDPDemoIDVault.id",
+		"IDPassword": "VaultPassword",
+		"path": "IBM_ID_VAULT/IDEPDemoIDVault.nsf",
+		"passwordReset": {
+			"helpText": "Call so and so for help resetting password"
+		},
+		"securitySettingsPolicy": {
+			"name": "IDP Demo Vault Security Settings Policy",
+			"description": "IDP Demo Vault Security Settings"
+		},
+		"masterPolicy": {
+			"description": "IDP Demo Vault Master Policy Description"
+		}
+	}
+	}

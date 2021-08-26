@@ -1,0 +1,66 @@
+#!/bin/bash
+
+ls -la /home/vagrant/dist/Notes.jar
+ls -lRl /home/vagrant/dist-src
+
+mkdir -p /home/vagrant/dist-built
+
+#############
+
+echo "Manifest-Version: 1.0" > ./manifest.txt
+echo "Class-Path: ./Notes.jar /opt/hcl/domino/notes/latest/linux/jvm/lib/ext/Notes.jar" >> ./manifest.txt
+
+
+#############
+
+
+echo "Building and creating a runnable JAR for: CheckNotesUser.java "
+
+javac -verbose -source 1.8 -target 1.8 -d /home/vagrant/dist-built -classpath /home/vagrant/dist/Notes.jar /home/vagrant/dist-src/net/prominic/domino/vagrant/CheckNotesUser.java
+
+cp ./manifest.txt ./manifest-temp.txt
+echo "Main-Class: net.prominic.domino.vagrant.CheckNotesUser" >> ./manifest-temp.txt
+
+jar -cvfm CheckNotesUser2.jar ./manifest-temp.txt net.prominic.domino.vagrant.CheckNotesUser -C /home/vagrant/dist-built/ .
+
+
+#############
+
+
+echo "Building and creating a runnable JAR for: CreateNamesDatabase.java "
+
+javac -verbose -source 1.8 -target 1.8 -d /home/vagrant/dist-built -classpath /home/vagrant/dist/Notes.jar /home/vagrant/dist-src/net/prominic/domino/vagrant/CreateNamesDatabase.java
+
+cp ./manifest.txt ./manifest-temp.txt
+echo "Main-Class: net.prominic.domino.vagrant.CreateNamesDatabase" >> ./manifest-temp.txt
+
+jar -cvfm CreateNamesDatabase2.jar ./manifest-temp.txt -C /home/vagrant/dist-built/ .
+
+
+#############
+
+echo "Building and creating a runnable JAR for: CheckDatabase.java "
+
+javac -verbose -source 1.8 -target 1.8 -d /home/vagrant/dist-built -classpath /home/vagrant/dist/Notes.jar /home/vagrant/dist-src/net/prominic/domino/vagrant/CheckDatabase.java
+
+cp ./manifest.txt ./manifest-temp.txt
+echo "Main-Class: net.prominic.domino.vagrant.CheckDatabase" >> ./manifest-temp.txt
+
+jar -cvfm CheckDatabase2.jar ./manifest-temp.txt -C /home/vagrant/dist-built/ .
+
+
+
+#############
+
+#https://www.codejava.net/java-core/tools/using-jar-command-examples
+echo "View one of the JARs..."
+
+jar tf CheckNotesUser2.jar
+
+echo "Attempting to run one of the new builds..."
+
+cp CheckNotesUser2.jar /local/notesjava
+
+cd /local/notesjava
+
+java -jar ./CheckNotesUser2.jar

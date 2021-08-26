@@ -1,0 +1,12 @@
+-- netmonitor.nsf but without the IP restriction
+
+-- try to install the servlet container for Shibboleth
+
+
+
+fix the java tar to use Domino 12 and the same SDKman
+
+JAVA_TAR
+
+install jedi
+
