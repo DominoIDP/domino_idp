@@ -1,0 +1,2 @@
+Copy or symlink necessary domino installer files into this directory before
+provisioning a VM.
