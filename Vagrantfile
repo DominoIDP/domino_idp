@@ -449,6 +449,18 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: "mkdir /home/vagrant/dist-id-files", privileged:false
   
   config.vm.provision "shell", name: "Copy IDs to dist-id-files for each access from host if Guest Additions folder sync is working", privileged:true, inline: "cp /local/dominodata/*.id /home/vagrant/dist-id-files; chown vagrant:vagrant /home/vagrant/dist-id-files/*.id", run:"always" 
+
+  # Install/configure java, jetty, and the idp
+  config.vm.provision "file", source: "idp_config", destination: "/tmp/idp_config", run:"always"
+  config.vm.provision "shell", name: "fix EOL", privileged:true, inline: "find /tmp/idp_config -type f | xargs sed -i -e 's/\r$//'"
+
+  config.vm.provision "shell", name: "install java/jetty", privileged:true, path: "idp_scripts/jetty_install.sh"
+  config.vm.provision "shell", name: "install idp", privileged:true, path: "idp_scripts/idp_install.sh"
+
+  config.vm.provision "shell", name: "config idp", privileged:true, path: "idp_scripts/idp_config.sh", run:"always"
+
+  # Allow access to idp through host
+  config.vm.network "forwarded_port", guest: 8080, host: 8080
   
   # Output a list of actions the user can run.  Run this last!
   config.vm.provision "shell",inline: "cat /home/vagrant/dist-support/CommandHelp.txt" , run:"always" 

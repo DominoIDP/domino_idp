@@ -1,0 +1,22 @@
+JAVA_OPTIONS="-Djava.rmi.server.hostname=localhost -server"
+JAVA_OPTIONS="$JAVA_OPTIONS -Djava.io.tmpdir=/var/lib/jetty/tmp -Djava.security.egd=file:/dev/./urandom"
+
+# Initial memory allocation 20% of system RAM
+JAVA_OPTIONS="$JAVA_OPTIONS -Xms`awk '/MemTotal/ { print int($2*0.2) }' < /proc/meminfo`k"
+# Maximum memory allocation 40% of system RAM
+JAVA_OPTIONS="$JAVA_OPTIONS -Xmx`awk '/MemTotal/ { print int($2*0.4) }' < /proc/meminfo`k"
+
+# Log garbage collection
+JAVA_OPTIONS="$JAVA_OPTIONS -Xlog:gc:file=/var/log/jetty/gc.log:time,level,tags:filecount=20,filesize=15M -verbose:gc"
+
+# Set jetty logging mechanism to avoid extra child process
+JAVA_OPTIONS="$JAVA_OPTIONS -Dorg.eclipse.jetty.util.log.class?=org.eclipse.jetty.util.log.Slf4jLog"
+
+JETTY_HOME=/opt/jetty
+JETTY_BASE=/var/lib/jetty
+
+JETTY_ARGS=""
+
+# Tune garbage collection for idp
+JAVA_OPTIONS="$JAVA_OPTIONS -XX:+DisableExplicitGC -XX:+UseG1GC"
+

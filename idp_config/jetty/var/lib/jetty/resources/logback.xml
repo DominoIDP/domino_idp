@@ -1,0 +1,18 @@
+<configuration>
+  <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
+
+  <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>/var/log/jetty/jetty.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>/var/log/jetty/jetty-%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+       <maxHistory>90</maxHistory>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%date{ISO8601} - %level [%logger:%line] - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="INFO">
+    <appender-ref ref="file" />
+  </root>
+</configuration>
