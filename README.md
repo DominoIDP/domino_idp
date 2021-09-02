@@ -186,10 +186,7 @@ all services, or a more complicated one releasing specific sets of attributes
 to specific services.
 
 The shibboleth idp provides a lot of functionality and can be configured in
-many ways:
-
-	https://shibboleth.atlassian.net/wiki/spaces/IDP4/overview
-
+many ways; please reference the [upstream documentation](https://shibboleth.atlassian.net/wiki/spaces/IDP4/overview).
 
 There will likely be additional configuration necessary or desired as the
 project progresses and this section will be revisited and updated over time.
