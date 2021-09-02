@@ -152,8 +152,17 @@ idp configuration
 -----------------
 
 Most of the idp configuration will be static and not change over time during
-the operation of the server. However, there are a few parts of the idp which
-will potentially need to be managed as services are integrated.
+the operation of the server. During the install, a domain and a hostname must
+be provided. For now, the idp is just using "example.com" and "idp.example.com"
+for this purpose for testing. We'll need to update the deployment to have
+domino and the idp use the same data. The also needs a value called the "Entity
+ID" which uniquely defines the instance of the idp when it is integrated into
+remote services. The usual convention for this when using the shibboleth idp is
+"https://$IDP_HOSTNAME/idp/shibboleth", but is sometimes changed to be more
+generic such as "https://$IDP_HOSTNAME/idp/saml2".
+
+However, there are a few parts of the idp which will potentially need to be
+managed as services are integrated.
 
 First, the attribute-resolver.xml file defines what attributes are available to
 be provided to services. We added a DataConnector to this config which pulls
