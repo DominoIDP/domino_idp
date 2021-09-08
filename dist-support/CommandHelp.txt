@@ -37,7 +37,7 @@ tell runjava quit
 tell runjava show tasks
 exit
 
-4) Retrieve the user.id from /local/notesdata/user.id by SCPing or copying it to the Windows VM which will run Notes Client, Domino Designer, and Domino Administrator.  The user.id password is the one defined in the setup.json which is currently 'password'
+4) Retrieve the user.id from /local/notesjava/user.id by SCPing or copying it to the Windows VM which will run Notes Client, Domino Designer, and Domino Administrator.  The user.id password is the one defined in the setup.json which is currently 'password'
 
 -----------------------------------------------------------------------------
 

@@ -91,7 +91,6 @@ DOMINO_SERVER_INSTALL_CONFIG = "./dist-support/installer.properties"
 #require_relative "user_input.rb"
 #NOTES_ID_PASSWORD ||= NotesPassword.new.to_s
 
-
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
@@ -102,7 +101,9 @@ Vagrant.configure("2") do |config|
   config.vm.define "domino-vm"
   config.vm.hostname = "domino-vm.mydomain.com"
 
-  config.vm.network "public_network"
+  #https://stackoverflow.com/questions/33250304/how-to-automatically-select-bridged-network-interfaces-in-vagrant
+  # Specify the interface when creating the public network
+  config.vm.network "public_network", bridge: "Intel(R) Dual Band Wireless-AC 8265"
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
