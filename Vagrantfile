@@ -462,6 +462,8 @@ Vagrant.configure("2") do |config|
 
   # Allow access to idp through host
   config.vm.network "forwarded_port", guest: 8080, host: 8080
+  # to make Domino http work (http://localhost)
+  config.vm.network "forwarded_port", guest: 80, host: 80
   
   # Output a list of actions the user can run.  Run this last!
   config.vm.provision "shell",inline: "cat /home/vagrant/dist-support/CommandHelp.txt" , run:"always" 
