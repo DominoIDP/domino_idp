@@ -206,7 +206,12 @@ Vagrant.configure("2") do |config|
 	#
 	# Already provisioned, it's now safe to use "config.vm.synced_folder" statements
 	# and additional scripts that require the users exist
-	#
+  # dist-id-files = place to store Domino id files
+  # dist = place for a Domino files (like mfa.nsf, idp.nsf)
+  # dist-src = java source code for a simple Domino servlet and few example standalone command line Domino java applications
+  # dist-build = example build scripts for domino servlet and standalone command line Domino java applications
+  # dist-built = is where files go once they are built 
+  #
     config.vm.synced_folder './dist-id-files', '/home/vagrant/dist-id-files', SharedFoldersEnableSymlinksCreate: false
     config.vm.synced_folder './dist',          '/home/vagrant/dist',          SharedFoldersEnableSymlinksCreate: false
     config.vm.synced_folder './dist-src',      '/home/vagrant/dist-src',      SharedFoldersEnableSymlinksCreate: false
@@ -218,8 +223,6 @@ Vagrant.configure("2") do |config|
 	#
   end
 
-  
-  
 
   # Install some dependencies
   config.vm.provision "shell", privileged: true, inline: <<-SHELL
@@ -464,7 +467,9 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 8080, host: 8080
   # to make Domino http work (http://localhost)
   config.vm.network "forwarded_port", guest: 80, host: 80
-  
+  # notes port
+  config.vm.network "forwarded_port", guest: 1352, host: 1352
+
   # Output a list of actions the user can run.  Run this last!
   config.vm.provision "shell",inline: "cat /home/vagrant/dist-support/CommandHelp.txt" , run:"always" 
   
