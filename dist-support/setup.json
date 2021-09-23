@@ -6,7 +6,8 @@
 			"domainName": "IDP",
 			"title": "IDP Demo Server",
 			"password": null,
-			"minPasswordLength": 0
+			"minPasswordLength": 0,
+                        "serverTasks": "HTTP"
 		},
 		"network": {
 			"hostName": "domino.idp-demo.com",
@@ -28,7 +29,7 @@
 			"IDFilePath":  "/local/dominodata/idp-demo-user.id"
 		},
 		"notesINI": {
-			"ServerTasks": "HTTP",
+			"ServerTasks": null,
 			"LOG_REPLICATION": "1",
 			"LOG_SESSIONS": "1"
 		},
@@ -61,5 +62,53 @@
 		"masterPolicy": {
 			"description": "IDP Demo Vault Master Policy Description"
 		}
-	}
-	}
+	},
+
+	"appConfiguration": {
+		"databases": [
+		  {
+			"filePath": "names.nsf",
+			"action": "update",
+			"documents": [
+			  {
+				"action": "update",
+				"findDocument": {
+				  "Type": "Server",
+				  "ServerName": "CN=demo/O=IDP"
+				},
+				"items": {
+				  "FullAdmin": "LocalDomainAdmins",
+				  "CreateAccess": "LocalDomainAdmins",
+				  "ReplicaAccess": "LocalDomainAdmins",
+				  "UnrestrictedList": "LocalDomainAdmins",
+				  "OnBehalfOfLst": "LocalDomainAdmins",
+				  "RestrictedList": "LocalDomainAdmins"
+				}
+			  }
+			]
+		  },
+	
+		  {
+			"action": "create",
+			"filePath": "domcfg.nsf",
+			"title": "Domino Web Server Configuration",
+			"templatePath": "domcfg5.ntf",
+			"signUsingAdminp": true,
+	
+			"documents": [
+			  {
+				"action": "create",
+				"items": {
+				  "Form": "LoginMap",
+				  "LF_LoginForm": "Login",
+				  "LF_LoginFormDB": "mfa.nsf",
+				  "LF_ServerType": "0",
+				  "LF_IP": "",
+				  "$PublicAccess": "1"
+				}
+			  }
+			]
+		  }
+		]
+	  }
+}
