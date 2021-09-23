@@ -28,7 +28,7 @@
 			"IDFilePath":  "/local/dominodata/idp-demo-user.id"
 		},
 		"notesINI": {
-			"ServerTasks": null,
+			"ServerTasks": "HTTP",
 			"LOG_REPLICATION": "1",
 			"LOG_SESSIONS": "1"
 		},
