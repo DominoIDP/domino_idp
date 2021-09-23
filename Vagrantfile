@@ -471,10 +471,11 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 1352, host: 1352
 
   # Copy DbSigner.jar and DbSigner.json into dominodata folder
-  config.vm.provision "shell", name: "Copy DbSigner.jar and DbSigner.json", privileged:true, inline: "cp /home/vagrant/dist-support/DbSigner.* /local/dominodata; chown domino:domino"   #####, run:"always" 
+  config.vm.provision "shell", name: "Copy DbSigner.jar", privileged:true, inline: "cp /home/vagrant/dist-support/DbSigner.jar /local/dominodata; chown domino:domino"   #####, run:"always" 
+  config.vm.provision "shell", name: "Copy dbsigner.json", privileged:true, inline: "cp /home/vagrant/dist-support/dbsigner.json /local/dominodata; chown domino:domino"   #####, run:"always" 
 
   # Copy mfa.nsf, idpproxy.nsf to dominodata folder
-  config.vm.provision "shell", name: "Copy mfa.nsf and idpproxy.nsf", privileged:true, inline: "cp /home/vagrant/dist-support/setup.nsf /local/dominodata; chown domino:domino"   #####, run:"always" 
+  config.vm.provision "shell", name: "Copy mfa.nsf and idpproxy.nsf", privileged:true, inline: "cp /home/vagrant/dist-support/*.nsf /local/dominodata; chown domino:domino"   #####, run:"always" 
 
   # Output a list of actions the user can run.  Run this last!
   config.vm.provision "shell",inline: "cat /home/vagrant/dist-support/CommandHelp.txt" , run:"always" 
