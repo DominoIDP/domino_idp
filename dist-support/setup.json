@@ -32,7 +32,7 @@
 			"ServerTasks": null,
 			"LOG_REPLICATION": "1",
 			"LOG_SESSIONS": "1",
-			"JAVAUSERCLASSES": "JavaAddin/idpsetup.jar"
+			"JAVAUSERCLASSES": "DbSigner.jar"
 		},
 		"security": {
 			"ACL": {
@@ -83,12 +83,23 @@
 				  "ReplicaAccess": "LocalDomainAdmins",
 				  "UnrestrictedList": "LocalDomainAdmins",
 				  "OnBehalfOfLst": "LocalDomainAdmins",
-				  "RestrictedList": "LocalDomainAdmins"
+				  "RestrictedList": "LocalDomainAdmins",
+				  "HTTP_EnableSessionAuth": "1"
+				}
+			  },
+			  {
+				"action": "create",
+				"computeWithForm": true,
+				"items": {
+				  "Form": "Program",
+				  "CmdLine": "DbSigner",
+				  "Enabled": "2",
+				  "Program": "runjava",
+				  "Source": "CN=demo/O=IDP"
 				}
 			  }
 			]
 		  },
-	
 		  {
 			"action": "create",
 			"filePath": "domcfg.nsf",
