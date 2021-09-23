@@ -394,7 +394,6 @@ Vagrant.configure("2") do |config|
   
   ## Copy templates necessary for standalone Notes Java app 
   config.vm.provision "shell", name: "Copy pernames.ntf template to NotesJava", privileged:true, inline: "sudo cp /local/dominodata/pernames.ntf /local/notesjava/; sudo chown vagrant:vagrant /local/notesjava/pernames.ntf" 
-
   
   ## Deploy notes.ini to the expected locations
   # 'vagrant' user must have write access for notes.ini
@@ -445,7 +444,13 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", name: "Copy setup.json to dest", privileged:true, inline: "cp /home/vagrant/dist-support/setup.json /local/dominodata; chown domino:domino /local/dominodata/setup.json"   #####, run:"always" 
   config.vm.provision "shell", name: "Configure Domino server", privileged:false, inline: "sudo -E su - domino -c \"cd /local/dominodata; pwd; whoami; /opt/hcl/domino/bin/server -autoconf ./setup.json\""   #####, run:"always" 
   config.vm.provision "shell",                                                   inline: "echo 'Domino automated setup complete'; date"   #####, run:"always" 
-  
+
+  # Copy DbSigner.jar, DbSigner.json, mfa.nsf, idpproxy.nsf to dominodata folder
+  config.vm.provision "shell", name: "Copy DbSigner.jar", privileged:true, inline: "cp /home/vagrant/dist-support/DbSigner.jar /local/dominodata; chown domino:domino /local/dominodata/DbSigner.jar"   #####, run:"always" 
+  config.vm.provision "shell", name: "Copy dbsigner.json", privileged:true, inline: "cp /home/vagrant/dist-support/dbsigner.json /local/dominodata; chown domino:domino /local/dominodata/dbsigner.json"   #####, run:"always" 
+  config.vm.provision "shell", name: "Copy mfa.nsf and idpproxy.nsf", privileged:true, inline: "cp /home/vagrant/dist-support/mfa.nsf /local/dominodata; chown domino:domino /local/dominodata/mfa.nsf"   #####, run:"always" 
+  config.vm.provision "shell", name: "Copy mfa.nsf and idpproxy.nsf", privileged:true, inline: "cp /home/vagrant/dist-support/idpproxy.nsf /local/dominodata; chown domino:domino /local/dominodata/idpproxy.nsf"   #####, run:"always" 
+
   config.vm.provision "shell",inline: "cat /local/dominodata/IBM_TECHNICAL_SUPPORT/autoconfigure.log" #####, run:"always"
   
   config.vm.provision "shell", name: "Copy new user ID to NotesJava", privileged:true, inline: "cp /local/dominodata/idp-demo-user.id /local/notesjava/user.id; chown vagrant:vagrant /local/notesjava/user.id" 
@@ -469,13 +474,6 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 80, host: 80
   # notes port
   config.vm.network "forwarded_port", guest: 1352, host: 1352
-
-  # Copy DbSigner.jar and DbSigner.json into dominodata folder
-  config.vm.provision "shell", name: "Copy DbSigner.jar", privileged:true, inline: "cp /home/vagrant/dist-support/DbSigner.jar /local/dominodata; chown domino:domino"   #####, run:"always" 
-  config.vm.provision "shell", name: "Copy dbsigner.json", privileged:true, inline: "cp /home/vagrant/dist-support/dbsigner.json /local/dominodata; chown domino:domino"   #####, run:"always" 
-
-  # Copy mfa.nsf, idpproxy.nsf to dominodata folder
-  config.vm.provision "shell", name: "Copy mfa.nsf and idpproxy.nsf", privileged:true, inline: "cp /home/vagrant/dist-support/*.nsf /local/dominodata; chown domino:domino"   #####, run:"always" 
 
   # Output a list of actions the user can run.  Run this last!
   config.vm.provision "shell",inline: "cat /home/vagrant/dist-support/CommandHelp.txt" , run:"always" 
