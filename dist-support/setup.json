@@ -31,7 +31,8 @@
 		"notesINI": {
 			"ServerTasks": null,
 			"LOG_REPLICATION": "1",
-			"LOG_SESSIONS": "1"
+			"LOG_SESSIONS": "1",
+			"JAVAUSERCLASSES": "JavaAddin/idpsetup.jar"
 		},
 		"security": {
 			"ACL": {
