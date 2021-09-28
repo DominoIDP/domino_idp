@@ -1,0 +1,5 @@
+*.log
+
+/vagrant_cached_domino_mfa_files/*
+
+.vagrant
