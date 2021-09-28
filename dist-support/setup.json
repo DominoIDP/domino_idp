@@ -88,6 +88,18 @@
 				}
 			  },
 			  {
+				"action": "update",
+				"findDocument": {
+				  "Type": "Person",
+				  "FirstName": "IDP-Demo",
+				  "LastName": "Admin"
+				},
+				"items": {
+				  "InternetAddress": "idp.admin@admin.com",
+				  "OfficePhoneNumber": "1234567890"
+				}
+			  },
+			  {
 				"action": "create",
 				"computeWithForm": true,
 				"items": {
