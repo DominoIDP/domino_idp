@@ -101,9 +101,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "domino-vm"
   config.vm.hostname = "domino-vm.mydomain.com"
 
-  #https://stackoverflow.com/questions/33250304/how-to-automatically-select-bridged-network-interfaces-in-vagrant
-  # Specify the interface when creating the public network
-  config.vm.network "public_network", bridge: "Intel(R) Dual Band Wireless-AC 8265"
+  config.vm.network "public_network"
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
