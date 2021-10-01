@@ -396,7 +396,8 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", name: "Copy dbsigner.json", privileged:true, inline: "cp /home/vagrant/dist/dbsigner.json /local/dominodata; chown domino:domino /local/dominodata/dbsigner.json"   #####, run:"always" 
   config.vm.provision "shell", name: "Copy mfa.nsf", privileged:true, inline: "cp /home/vagrant/dist/mfa.nsf /local/dominodata; chown domino:domino /local/dominodata/mfa.nsf"   #####, run:"always" 
   config.vm.provision "shell", name: "Copy idpproxy.nsf", privileged:true, inline: "cp /home/vagrant/dist/idpproxy.nsf /local/dominodata; chown domino:domino /local/dominodata/idpproxy.nsf"   #####, run:"always" 
-  
+  config.vm.provision "shell", name: "Copy idpconfig.nsf", privileged:true, inline: "cp /home/vagrant/dist/idpconfig.nsf /local/dominodata; chown domino:domino /local/dominodata/idpconfig.nsf"   #####, run:"always" 
+
 
   ## Deploy notes.ini to the expected locations
   # 'vagrant' user must have write access for notes.ini

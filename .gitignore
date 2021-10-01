@@ -3,3 +3,5 @@
 /vagrant_cached_domino_mfa_files/*
 
 .vagrant
+
+/dist-id-files/*.id
