@@ -96,7 +96,12 @@
 				},
 				"items": {
 				  "InternetAddress": "idp.admin@admin.com",
-				  "OfficePhoneNumber": "1234567890"
+				  "OfficePhoneNumber": "1234567890",
+				  "PhoneNumber": "555-666-777",
+				  "State": "IL",
+				  "Title": "Mr.",
+				  "initials": "IA",
+				  "employeeType": "consultant"
 				}
 			  },
 			  {
