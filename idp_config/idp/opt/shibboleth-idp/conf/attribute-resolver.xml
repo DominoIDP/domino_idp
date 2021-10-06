@@ -81,6 +81,28 @@ list of possible components and their options.
          external authentication mechanism
     -->
     <DataConnector id="externalAttributes" xsi:type="Subject"
-                   exportAttributes="mail eduPersonNickname" />
+                   exportAttributes="
+				departmentNumber
+				employeeNumber
+				employeeType
+				homePhone
+				initials
+				mail
+				mobile
+				o
+				ou
+				pager
+				homePostalAddress
+				postalCode
+				sn
+				st
+				telephoneNumber
+				title
+				uid
+				postalAddress
+				l
+				displayName
+				givenName
+				     " />
 
 </AttributeResolver>
