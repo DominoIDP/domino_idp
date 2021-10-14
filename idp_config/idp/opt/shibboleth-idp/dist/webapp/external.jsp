@@ -2,6 +2,7 @@
 <%@ page import="net.shibboleth.idp.authn.*" %>
 <%@ page import="net.shibboleth.idp.attribute.*"%>
 <%@ page import="net.shibboleth.idp.authn.principal.*"%>
+<%@ page import="net.shibboleth.idp.saml.authn.principal.*"%>
 <%@ page import="java.security.*"%>
 <%@ page import="javax.security.auth.*"%>
 <%@ page import="java.util.*"%>
@@ -20,8 +21,8 @@ final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger("external_auth
 // being processed by the callback from domino after an explicit authentication redirect.
 // Otherwise, redirect_key != null, and we found a potential existing domino session
 // we are going to try and validate without having to redirect the user to domino.
-private String validate_session(HttpServletRequest request, HttpServletResponse response,
-				String callback_key, String redirect_key)
+private String validate_session(Environment environment, HttpServletRequest request,
+				HttpServletResponse response, String callback_key, String redirect_key)
 				throws ExternalAuthenticationException, java.io.IOException {
 
 	final String cookie_header = request.getHeader("Cookie");
@@ -103,6 +104,12 @@ private String validate_session(HttpServletRequest request, HttpServletResponse 
 		return "domino validation failed";
 	}
 
+	boolean mfa = false;
+	final JsonNode mfaNode = jsonRoot.get("mfa");
+	if (mfaNode != null && mfaNode.isNumber() && mfaNode.intValue() == 1) {
+		mfa = true;
+	}
+
 	final JsonNode usernameNode = jsonRoot.get("username");
 	if (usernameNode == null) {
 		logger.error("domino response username not found");
@@ -167,11 +174,25 @@ private String validate_session(HttpServletRequest request, HttpServletResponse 
 		principals.add(new IdPAttributePrincipal(attr));
 	}
 
+	principals.add(new AuthnContextClassRefPrincipal("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport"));
+	principals.add(new AuthnContextClassRefPrincipal("urn:oasis:names:tc:SAML:2.0:ac:classes:Password"));
+
+	if (mfa) {
+		final String dominoMFAPrincipal =
+			environment.getProperty("idp.authn.External.domino.MFAPrincipal");
+		if (dominoMFAPrincipal != null) {
+			principals.add(new AuthnContextClassRefPrincipal(dominoMFAPrincipal));
+		}
+		else {
+			logger.warn("domino MFAPrincipal property not found");
+		}
+	}
+
 	request.setAttribute(ExternalAuthentication.SUBJECT_KEY,
 		new Subject(false, principals, Collections.EMPTY_SET, Collections.EMPTY_SET));
 
 	ExternalAuthentication.finishExternalAuthentication(callback_key != null ?
-															callback_key : redirect_key, request, response);
+						callback_key : redirect_key, request, response);
 
 	return null;
 }
@@ -217,7 +238,8 @@ try {
 	// If there's either an existing domino session, or we are processing the redirect
 	// callback, try to validate the domino session
 	if (domino_session || callback_key != null) {
-		String validate_error = validate_session(request, response, callback_key, redirect_key);
+		String validate_error = validate_session(environment, request, response,
+						callback_key, redirect_key);
 
 		// If validation succeeds, we're good to go, so hand back to idp
 		if (validate_error == null) {
