@@ -41,6 +41,11 @@ yourself (eg, Domino_12.0_Linux_English.tar, Domino_1101FP2_Linux.tar).
 Copy these files into or create symlinks to them in the
 vagrant_cached_domino_mfa_files subdirectory of the git checkout.
 
+If you want to change the version of jetty or the idp, the idp entity-id,
+scope, servername, or private key password, copy the file
+idp_config/DEFAULTS.sh idp_config/CONFIG.sh, update the values you wish to
+change, and remove the ones you want to leave at defaults.
+
 At this point, you can execute 'vagrant up' in the git checkout directory
 to spin up a vm instance, or use the utility scripts
 vagrant_up.sh/vagrant_up.ps1 to create a log file with the initialization
@@ -70,10 +75,7 @@ idp_config/jetty directory are deployed and jetty is started.
 
 Finally, it installs/configures the shibboleth idp. The configuration files
 found in the idp_config/idp directory are deployed and jetty is restarted to
-load the idp war. In addition to the initial configuration performed by a
-vagrant up, the idp config files will be redeployed via vagrant provision,
-allowing a simple mechanism to update the files and push them to the running
-vagrant instance.
+load the idp war. 
 
 Currently jetty is listening using plaintext http on port 8080, which is NAT'd
 from port 8080 on the host running vagrant. It can be accessed either via
@@ -91,49 +93,53 @@ user information contained in Domino.
 
 The expected authentication flow is:
 
-* A user accesses a service configured to use Domino as the SSO identity
-  provider (eg, http://some.service/content).
+1) A user accesses a service configured to use Domino as the SSO identity
+   provider (eg, http://some.service/content).
 
-* The service redirects the user via either redirect or post to the shibboleth
-  idp running on the domino server with an authentication request (eg,
-  http://domino.server/idp/profile/SAML/...).
+2) The service redirects the user via either redirect or post to the shibboleth
+   idp running on the domino server with an authentication request (eg,
+   http://domino.server/idp/profile/SAML/...).
 
-* The shibboleth idp redirects the user to the external authentication handler
-  (http://domino.server/idp/external.jsp).
+3) The shibboleth idp redirects the user to the external authentication handler
+   (http://domino.server/idp/external.jsp).
 
-* The external authentication handler redirects the user to the domino
-  authentication page, including an identifier key
-  (http://domino.server/some_domino_url/auth?idp_key=<key>). This key should be
-  considered an opaque value and needs to be passed back after successfull
-  authentication. Currently the key is a spring webflow execution key of the
-  form "s<integer>e<integer>" but this is implementation dependent and might
-  change. This URL will be accessed directly by the user's browser after following
-  the redirect.
+4) The external authentication handler checks to see if there is an existing
+   domino session by looking for the cookie defined by the
+   idp.authn.External.domino.SessionCookie parameter in the
+   idp conf/domino.properties. If a session is found, it is checked for
+   validity per step 7, and if valid, processing continues with step 8.
+   Otherwise, processing continues to step 5.
 
-* The domino authentication page needs to authenticate the user and then
-  redirect them back to the idp external authentication page along with the key
-  that was provided and some form of authentication/session token
-  (http://domino.server/idp/external.jsp?idp_key=<key>&auth_token=<token>). The
-  auth token could potentially be an explicitly provided value, or it might be
-  an existing cookie such as an LTPA token. The auth token is provided through
-  the end user browser and as such can not be implicitly trusted. The final
-  step of the authentication process will be a callback from the idp to the
-  domino authentication mechanism to validate the auth token and retrieve the
-  username and other attributes for them
-  (http://domino.server/some_domino_url/validate?auth_token=<token>). Again,
-  the token might be provided as an explicit parameter, or it might be provided
-  as a cookie, these implementation decisions have yet to be made. If the token
-  is valid, the domino server should respond with information about the user in
-  XML or JSON or similar format. The validation URL will *only* be called by
-  the idp, it will not be accessed directly by the user. This URL can
-  potentially be restricted to local access.
+5) The external authentication handler redirects the user to the domino
+   authentication page, including an identifier key
+   (http://domino.server/names.nsf?open&idp_key=<key>). This key should be
+   considered an opaque value and needs to be passed back after successful
+   authentication. Currently the key is a spring webflow execution key of the
+   form "s<integer>e<integer>" but this is implementation dependent and might
+   change. This URL will be accessed directly by the user's browser after
+   following the redirect.
 
-* The idp external authentication mechanism will parse the user information and
-  return control to the idp SSO mechanism, which will assemble an assertion and
-  return it to the client.
+6) The domino authentication page needs to authenticate the user, set a valid
+   domino session cookie, and then redirect them back to the idp external
+   authentication page along with the key that was provided
+   (http://domino.server/idp/external.jsp?idp_key=<key>).
 
-* Finally, the client will provide the assertion to the original service and be
-  provided the content requested.
+7) The session cookie is provided by the end user browser and as such can not
+   be implicitly trusted. The final step of the authentication process is a
+   callback from the idp to the  domino authentication mechanism to validate
+   the session cookie and retrieve the username and other attributes for the
+   authenticated user (http://domino.server//idpproxy.nsf/validate). The
+   session cookie will be provided to this call by the idp. If the session is
+   domino server will respond to the validation call with a JSON block
+   containing the status of the validation, along with the username, mfa
+   status, and attributes for the user if the status indicates success.
+
+8) The idp external authentication mechanism will parse the user information and
+   return control to the idp SSO mechanism, which will assemble an assertion and
+   return it to the client.
+
+9) Finally, the client will provide the assertion to the original service and be
+   provided the content requested.
 
 
 Note: to simplify testing, the idp has a built in service that will exercise
@@ -143,23 +149,14 @@ external service to be integrated. This can be accessed via the URL
 	http://domino.server/idp/admin/hello
 
 
-Pending implementation of the domino side of the authentication integration,
-the idp external auth mechanism currently returns a hard coded user/attributes
-when this is called.
-
-
 idp configuration
 -----------------
 
 Most of the idp configuration will be static and not change over time during
-the operation of the server. During the install, a domain and a hostname must
-be provided. For now, the idp is just using "example.com" and "idp.example.com"
-for this purpose for testing. We'll need to update the deployment to have
-domino and the idp use the same data. The also needs a value called the "Entity
-ID" which uniquely defines the instance of the idp when it is integrated into
-remote services. The usual convention for this when using the shibboleth idp is
-"https://$IDP_HOSTNAME/idp/shibboleth", but is sometimes changed to be more
-generic such as "https://$IDP_HOSTNAME/idp/saml2".
+the operation of the server. During the install, an entity-id, scope,
+servername, and private key password must be provided. Defaults are configured
+in the idp_config/DEFAULTS.sh file, and can be overridden by copying the file
+to idp_config/CONFIG.sh and updating them.
 
 However, there are a few parts of the idp which will potentially need to be
 managed as services are integrated.

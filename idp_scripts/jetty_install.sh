@@ -1,6 +1,10 @@
 #! /bin/sh
 
-JETTY_VERSION=9.4.43.v20210629
+. /tmp/idp_config/DEFAULTS.sh
+
+if [ -f /tmp/idp_config/CONFIG.sh ] ; then
+	. /tmp/idp_config/CONFIG.sh
+fi
 
 # Install java 11 for jetty
 

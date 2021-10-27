@@ -464,8 +464,6 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", name: "install java/jetty", privileged:true, path: "idp_scripts/jetty_install.sh"
   config.vm.provision "shell", name: "install idp", privileged:true, path: "idp_scripts/idp_install.sh"
 
-  config.vm.provision "shell", name: "config idp", privileged:true, path: "idp_scripts/idp_config.sh", run:"always"
-
   # Allow access to idp through host
   config.vm.network "forwarded_port", guest: 8080, host: 8080
   # to make Domino http work (http://localhost)
