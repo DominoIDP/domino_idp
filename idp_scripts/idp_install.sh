@@ -46,6 +46,9 @@ chgrp jetty /opt/shibboleth-idp/metadata
 chmod 775 /opt/shibboleth-idp/metadata
 chgrp jetty /opt/shibboleth-idp/metadata/*
 chmod 664 /opt/shibboleth-idp/metadata/*
+mkdir /opt/shibboleth-idp/metadata/domino-saml
+chgrp jetty /opt/shibboleth-idp/metadata/domino-saml
+chmod 775 /opt/shibboleth-idp/metadata/domino-saml
 
 # copy in config files
 cp -r /tmp/idp_config/idp/* /

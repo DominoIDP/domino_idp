@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    This file is an EXAMPLE policy file.  While the policy presented in this 
+    example file is illustrative of some simple cases, it relies on the names of
+    non-existent example services and the example attributes demonstrated in the
+    default attribute-resolver.xml file.
+
+    This example does contain some usable "general purpose" policies that may be
+    useful in conjunction with specific deployment choices, but those policies may
+    not be applicable to your specific needs or constraints.    
+-->
+<AttributeFilterPolicyGroup id="ShibbolethFilterPolicy"
+        xmlns="urn:mace:shibboleth:2.0:afp"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:mace:shibboleth:2.0:afp http://shibboleth.net/schema/idp/shibboleth-afp.xsd">
+
+	<!-- This policy releases all attributes to all known SPs and is for demo use only -->
+	<AttributeFilterPolicy id="release-everything">
+	    <PolicyRequirementRule xsi:type="ANY" />
+
+            <AttributeRule attributeID="departmentNumber" permitAny="true" />
+            <AttributeRule attributeID="employeeNumber" permitAny="true" />
+            <AttributeRule attributeID="employeeType" permitAny="true" />
+            <AttributeRule attributeID="homePhone" permitAny="true" />
+            <AttributeRule attributeID="initials" permitAny="true" />
+            <AttributeRule attributeID="mail" permitAny="true" />
+            <AttributeRule attributeID="mobile" permitAny="true" />
+            <AttributeRule attributeID="o" permitAny="true" />
+            <AttributeRule attributeID="ou" permitAny="true" />
+            <AttributeRule attributeID="pager" permitAny="true" />
+            <AttributeRule attributeID="homePostalAddress" permitAny="true" />
+            <AttributeRule attributeID="postalCode" permitAny="true" />
+            <AttributeRule attributeID="sn" permitAny="true" />
+            <AttributeRule attributeID="st" permitAny="true" />
+            <AttributeRule attributeID="telephoneNumber" permitAny="true" />
+            <AttributeRule attributeID="title" permitAny="true" />
+            <AttributeRule attributeID="uid" permitAny="true" />
+            <AttributeRule attributeID="postalAddress" permitAny="true" />
+            <AttributeRule attributeID="l" permitAny="true" />
+            <AttributeRule attributeID="displayName" permitAny="true" />
+            <AttributeRule attributeID="givenName" permitAny="true" />
+	</AttributeFilterPolicy>
+
+</AttributeFilterPolicyGroup>
