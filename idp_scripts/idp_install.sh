@@ -69,6 +69,8 @@ sed -i -e '75,76d' /opt/shibboleth-idp/metadata/idp-metadata.xml
 sed -i -e '76,184d' /opt/shibboleth-idp/metadata/idp-metadata.xml
 sed -i -e 's/https/http/g' /opt/shibboleth-idp/metadata/idp-metadata.xml
 sed -i -e 's#/idp/profile#:8080/idp/profile#' /opt/shibboleth-idp/metadata/idp-metadata.xml
+sed -i -e '/AuthnRequest/ d' /opt/shibboleth-idp/metadata/idp-metadata.xml
+sed -i -e '/SingleSignOnService/ s/-->//' /opt/shibboleth-idp/metadata/idp-metadata.xml
 
 # set random salt for persistent id
 sed -i -e "s#^\#idp.persistentId.salt.*#idp.persistentId.salt = $(dd status=none if=/dev/urandom bs=1 count=32 | base64)#" /opt/shibboleth-idp/credentials/secrets.properties
